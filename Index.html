@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MODA TREND</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5f5;color:#171717;font-family:Arial,sans-serif}
+header{background:#111;color:white;padding:24px 15px;text-align:center}
+header h1{letter-spacing:5px;margin:0}
+header p{color:#bbb;margin-bottom:0}
+.hero{padding:40px 18px;text-align:center;background:#e8e2d9}
+.hero h2{font-size:30px;margin:0 0 12px}
+.hero p{color:#555}
+.search{display:block;width:92%;padding:15px;margin:20px auto;border:1px solid #ddd;border-radius:10px;font-size:16px}
+.categories{display:flex;gap:8px;overflow-x:auto;padding:0 12px 20px}
+.categories button{padding:10px 15px;border:1px solid #222;border-radius:22px;background:white;white-space:nowrap}
+.categories button.active{background:#111;color:white}
+.section{margin:12px}
+.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 12px 30px}
+.product{background:white;border-radius:12px;overflow:hidden;padding-bottom:12px}
+.product img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#ddd}
+.product h3{font-size:15px;margin:10px}
+.product p{font-size:13px;margin:8px 10px;color:#666}
+.product .price{font-weight:bold;color:#111;font-size:16px}
+.product a{display:block;text-align:center;background:#111;color:white;text-decoration:none;padding:11px;margin:10px;border-radius:7px;font-size:13px}
+footer{background:#111;color:#ccc;text-align:center;padding:25px 12px;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h1>MODA TREND</h1>
+<p>Seu estilo. Suas descobertas.</p>
+</header>
+
+<section class="hero">
+<h2>Vista as tendências.</h2>
+<p>Descubra roupas e encontre seu próximo look.</p>
+</section>
+
+<input id="search" class="search" type="search" placeholder="Buscar roupas...">
+
+<nav class="categories">
+<button class="active" data-cat="Todas">Todas</button>
+<button data-cat="Camisetas">Camisetas</button>
+<button data-cat="Moletons">Moletons</button>
+<button data-cat="Calças">Calças</button>
+<button data-cat="Tênis">Tênis</button>
+</nav>
+
+<h2 class="section">Descubra peças</h2>
+<main id="products" class="products"></main>
+
+<footer>
+<strong>MODA TREND</strong>
+<p>Descubra novas roupas e tendências.</p>
+<p>Os produtos são divulgados por seus respectivos vendedores.</p>
+</footer>
+
+<script>
+const roupas = [
+ {nome:"Camiseta Streetwear",cat:"Camisetas",preco:"Consulte a loja",loja:"Exemplo de loja",foto:"https://placehold.co/500x650/e8e2d9/171717?text=Camiseta",link:"https://example.com"},
+ {nome:"Moletom Urbano",cat:"Moletons",preco:"Consulte a loja",loja:"Exemplo de loja",foto:"https://placehold.co/500x650/d9d9d9/171717?text=Moletom",link:"https://example.com"},
+ {nome:"Calça Cargo",cat:"Calças",preco:"Consulte a loja",loja:"Exemplo de loja",foto:"https://placehold.co/500x650/e2ded7/171717?text=Calca+Cargo",link:"https://example.com"},
+ {nome:"Tênis Casual",cat:"Tênis",preco:"Consulte a loja",loja:"Exemplo de loja",foto:"https://placehold.co/500x650/d7dce2/171717?text=Tenis",link:"https://example.com"}
+];
+
+const area = document.getElementById("products");
+const busca = document.getElementById("search");
+let categoria = "Todas";
+
+function mostrarRoupas(){
+ const termo = busca.value.toLowerCase().trim();
+ const lista = roupas.filter(r =>
+  (categoria === "Todas" || r.cat === categoria) &&
+  (r.nome.toLowerCase().includes(termo) ||
+   r.loja.toLowerCase().includes(termo))
+ );
+
+ area.replaceChildren();
+
+ if(lista.length === 0){
+  area.textContent = "Nenhuma roupa encontrada.";
+  return;
+ }
+
+ lista.forEach(r => {
+  const card = document.createElement("article");
+  card.className = "product";
+
+  const img = document.createElement("img");
+  img.src = r.foto;
+  img.alt = r.nome;
+  img.loading = "lazy";
+
+  const nome = document.createElement("h3");
+  nome.textContent = r.nome;
+
+  const loja = document.createElement("p");
+  loja.textContent = r.loja;
+
+  const preco = document.createElement("p");
+  preco.className = "price";
+  preco.textContent = r.preco;
+
+  const link = document.createElement("a");
+  link.href = r.link;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "Ver produto";
+
+  card.append(img,nome,loja,preco,link);
+  area.appendChild(card);
+ });
+}
+
+busca.addEventListener("input",mostrarRoupas);
+
+document.querySelectorAll("[data-cat]").forEach(botao=>{
+ botao.addEventListener("click",()=>{
+  categoria = botao.dataset.cat;
+  document.querySelectorAll("[data-cat]").forEach(b=>b.classList.remove("active"));
+  botao.classList.add("active");
+  mostrarRoupas();
+ });
+});
+
+mostrarRoupas();
+</script>
+</body>
+</html>
